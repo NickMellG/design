@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Обери стиль</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #f6f2ea;
+    --panel: #4a2e1b;
+    --accent: #a66322;
+    --accent-2: #f1c98c;
+    --ink: #2a1c10;
+    --transition: 650ms cubic-bezier(.4,0,.2,1);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    font-family:'Inter', sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing:antialiased;
+    transition: background var(--transition);
+  }
+
+  body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 48px 20px 80px;
+  }
+
+  .lead{
+    max-width: 460px;
+    text-align:center;
+    margin-bottom: 34px;
+  }
+
+  .lead h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size: clamp(26px, 5vw, 34px);
+    margin: 0 0 10px;
+  }
+
+  .lead p{
+    margin:0;
+    font-size: 14.5px;
+    line-height:1.5;
+    color: #6b5c4c;
+  }
+
+  .switcher{
+    display:flex;
+    gap:8px;
+    background: #eee6d6;
+    padding:6px;
+    border-radius: 999px;
+    margin-bottom: 40px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .switcher button{
+    appearance:none;
+    border:none;
+    background: transparent;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-family:'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight:500;
+    color: #6b5c4c;
+    cursor:pointer;
+    transition: background .3s ease, color .3s ease;
+    white-space:nowrap;
+  }
+
+  .switcher button.active{
+    background: var(--ink);
+    color: #fff;
+  }
+
+  /* ---- style board (no object shape, just a flat panel) ---- */
+  .board{
+    width: min(86vw, 380px);
+    aspect-ratio: 4/5;
+    border-radius: 18px;
+    position:relative;
+    background: var(--panel);
+    box-shadow: 0 24px 50px -18px rgba(0,0,0,.3);
+    transition: background var(--transition), box-shadow var(--transition);
+    overflow:hidden;
+    padding: 28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+
+  .board::after{
+    content:'';
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 25% 15%, rgba(255,255,255,.10), transparent 45%),
+                       radial-gradient(circle at 85% 90%, rgba(0,0,0,.18), transparent 55%);
+    mix-blend-mode: overlay;
+    pointer-events:none;
+  }
+
+  .sprig{
+    position:absolute;
+    color: var(--accent-2);
+    opacity: .55;
+    transition: color var(--transition);
+    pointer-events:none;
+  }
+  .sprig svg{ width:100%; height:100%; display:block; }
+  .sprig path, .sprig circle{ fill:none; stroke: currentColor; stroke-width: 1.3; stroke-linecap:round; stroke-linejoin:round; }
+  .sprig circle{ fill: currentColor; stroke:none; }
+
+  .sprig.top-right{
+    top: 22px; right: 20px;
+    width: 96px; height: 96px;
+    transform: rotate(18deg);
+  }
+  .sprig.bottom-left{
+    bottom: 26px; left: 18px;
+    width: 78px; height: 78px;
+    transform: scaleX(-1) rotate(12deg);
+  }
+
+  .type-specimen{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-style: italic;
+    font-size: clamp(30px, 8vw, 42px);
+    line-height: 1.05;
+    color: var(--accent-2);
+    transition: color var(--transition);
+    max-width: 85%;
+  }
+
+  .sprigs{
+    position:absolute;
+    right: 18px;
+    bottom: 84px;
+    width: 46%;
+    max-width: 160px;
+    color: var(--accent-2);
+    opacity: .85;
+    transition: color var(--transition);
+    pointer-events:none;
+  }
+  .sprigs svg{ width:100%; height:auto; display:block; }
+  .sprigs path, .sprigs circle{ fill:none; stroke: currentColor; stroke-width: 1.4; stroke-linecap:round; stroke-linejoin:round; }
+  .sprigs circle{ fill: currentColor; stroke: none; }
+
+  .mark{
+    align-self:flex-end;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1.4px solid var(--accent-2);
+    position:relative;
+    transition: border-color var(--transition);
+  }
+  .mark::before{
+    content:'';
+    position:absolute;
+    top:50%; left:50%;
+    width: 16px; height: 16px;
+    background: var(--accent-2);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    transition: background var(--transition);
+  }
+
+  .row-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap: 16px;
+  }
+
+  .label-stack{
+    display:flex;
+    flex-direction:column;
+    gap: 3px;
+  }
+  .label-stack span{
+    font-family:'Inter', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 1.2px;
+    color: var(--accent-2);
+    opacity: .85;
+    transition: color var(--transition);
+  }
+
+  /* ---- palette row ---- */
+  .palette{
+    display:flex;
+    gap: 10px;
+    margin-top: 26px;
+  }
+  .swatch{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 6px;
+  }
+  .swatch .chip{
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.08);
+    transition: background .3s ease;
+  }
+  .swatch .hex{
+    font-size: 10px;
+    color: #8a7c6c;
+  }
+
+  .theme-name{
+    margin-top: 24px;
+    font-family:'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight:600;
+    text-align:center;
+  }
+  .theme-desc{
+    font-size: 13px;
+    color:#6b5c4c;
+    text-align:center;
+    max-width: 300px;
+    margin: 4px auto 0;
+  }
+</style>
+</head>
+<body>
+
+  <div class="lead">
+    <h1>Який стиль тобі більше до вподоби?</h1>
+    <p>Підбираю естетику для одного проєкту — глянь три варіанти і скажи, який чіпляє найбільше.</p>
+  </div>
+
+  <div class="switcher" id="switcher">
+    <button data-theme="a" class="active">Варіант A</button>
+    <button data-theme="b">Варіант B</button>
+    <button data-theme="c">Варіант C</button>
+  </div>
+
+  <div class="board" id="board">
+    <div class="sprig top-right">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M90 10 C 75 20, 65 32, 58 48" />
+        <path d="M78 22 C 70 24, 64 27, 58 32" />
+        <path d="M70 34 C 63 35, 58 38, 52 42" />
+        <path d="M62 46 C 56 46, 51 48, 46 52" />
+        <circle cx="30" cy="70" r="5" />
+        <circle cx="20" cy="60" r="3.5" />
+        <path d="M40 62 C 34 66, 27 68, 20 68" />
+      </svg>
+    </div>
+    <div class="sprig bottom-left">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 92 C 20 78, 30 64, 40 46" />
+        <path d="M16 80 C 23 77, 29 74, 35 70" />
+        <path d="M24 66 C 30 63, 35 60, 41 56" />
+        <path d="M32 52 C 38 49, 42 46, 47 42" />
+        <circle cx="70" cy="24" r="4.5" />
+        <path d="M62 34 C 66 30, 70 28, 76 27" />
+      </svg>
+    </div>
+    <div class="type-specimen" id="specimen">Люблю Натусіка</div>
+    <div class="sprigs" id="sprigs"></div>
+    <div class="row-bottom">
+      <div class="label-stack">
+        <span id="labelTop">STYLE</span>
+        <span id="labelBottom">01</span>
+      </div>
+      <div class="mark"></div>
+    </div>
+  </div>
+
+  <div class="palette" id="palette"></div>
+
+  <div class="theme-name" id="themeName"></div>
+  <div class="theme-desc" id="themeDesc"></div>
+
+<script>
+const themes = {
+  a: {
+    name: "Тепла класика",
+    desc: "Насичені землисті тони, оксамитова текстура, вишуканий шрифт.",
+    bg: "#f6f2ea",
+    panel: "#4a2e1b",
+    accent2: "#f1c98c",
+    letters: "Aa",
+    swatches: ["#4A2E1B", "#D8A769", "#A66322", "#F1C98C"]
+  },
+  b: {
+    name: "Світла мінімалістика",
+    desc: "Чисті лінії, повітря, спокійна світла гама.",
+    bg: "#f4ede0",
+    panel: "#e8d5b5",
+    accent2: "#6e3b0e",
+    letters: "Bb",
+    swatches: ["#FDF6E2", "#E8D5B5", "#A66322", "#6E3B0E"]
+  },
+  c: {
+    name: "Контрастна драма",
+    desc: "Темне тло і яскравий енергійний акцент.",
+    bg: "#efe9e2",
+    panel: "#1c1c1e",
+    accent2: "#e9536b",
+    letters: "Cc",
+    swatches: ["#1C1C1E", "#9E2A3B", "#D6304A", "#3E5C31"]
+  }
+};
+
+const sprigSVG = `
+<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 130 C 30 95, 42 65, 62 40" />
+  <path d="M26 112 C 34 106, 41 103, 48 98" />
+  <path d="M32 94 C 40 89, 46 86, 53 81" />
+  <path d="M38 76 C 45 72, 50 69, 56 64" />
+  <path d="M44 58 C 50 55, 54 52, 59 47" />
+  <path d="M120 135 C 116 100, 122 70, 136 44" />
+  <path d="M115 114 C 106 108, 99 106, 91 104" />
+  <path d="M124 96 C 133 91, 140 90, 147 89" />
+  <path d="M117 76 C 109 71, 103 69, 96 67" />
+  <circle cx="165" cy="70" r="6" />
+  <circle cx="178" cy="82" r="4.5" />
+  <circle cx="182" cy="60" r="3.5" />
+  <path d="M155 92 C 161 82, 169 73, 179 68" />
+</svg>`;
+
+const switcher = document.getElementById('switcher');
+const board = document.getElementById('board');
+const specimen = document.getElementById('specimen');
+const sprigs = document.getElementById('sprigs');
+const labelBottom = document.getElementById('labelBottom');
+const palette = document.getElementById('palette');
+const themeName = document.getElementById('themeName');
+const themeDesc = document.getElementById('themeDesc');
+const root = document.documentElement;
+
+sprigs.innerHTML = sprigSVG;
+
+const order = { a: "01", b: "02", c: "03" };
+
+function renderPalette(hexes){
+  palette.innerHTML = hexes.map(h => `
+    <div class="swatch">
+      <div class="chip" style="background:${h}"></div>
+      <div class="hex">${h}</div>
+    </div>
+  `).join('');
+}
+
+function applyTheme(key){
+  const t = themes[key];
+  root.style.setProperty('--bg', t.bg);
+  root.style.setProperty('--panel', t.panel);
+  root.style.setProperty('--accent-2', t.accent2);
+  document.body.style.background = t.bg;
+  labelBottom.textContent = order[key];
+  themeName.textContent = t.name;
+  themeDesc.textContent = t.desc;
+  renderPalette(t.swatches);
+
+  [...switcher.children].forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === key);
+  });
+}
+
+switcher.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  applyTheme(btn.dataset.theme);
+});
+
+applyTheme('a');
+</script>
+
+</body>
+</html>
